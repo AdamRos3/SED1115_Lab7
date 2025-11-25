@@ -1,5 +1,6 @@
 from machine import Pin, PWM
 from servo_translator import translate
+import time
 
 SHOULDER_SERVO = PWM(Pin(0))
 SHOULDER_SERVO.freq(50)
@@ -57,6 +58,8 @@ def interpret_gcode(raw_gcode_commands):
                 break
             else:
                 print("Unexpected error. You shouldn't be here.")
+        
+        time.sleep(0.5)
 
 def execute_move_arm(shoulder_angle, elbow_angle):
     if ((shoulder_angle == None) or (elbow_angle == None)):
@@ -66,9 +69,11 @@ def execute_move_arm(shoulder_angle, elbow_angle):
     ELBOW_SERVO.duty_u16(translate(elbow_angle))
 
 raw_gcode_commands = []
-read_gcode("file", raw_gcode_commands)
+read_gcode("line.gcode", raw_gcode_commands)
 
 for command in raw_gcode_commands:
     print(command)
+
+    time.sleep(0.5)
 
 interpret_gcode(raw_gcode_commands)
